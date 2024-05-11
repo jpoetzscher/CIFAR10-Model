@@ -125,16 +125,7 @@ optimizer = optim.AdamW(model.parameters(), lr=max_lr, weight_decay=1e-4)
 print_every = 100
 
 def train(model, optimizer, epochs=1):
-    """
-    Train a model on CIFAR-10 using the PyTorch Module API.
-
-    Inputs:
-    - model: A PyTorch Module giving the model to train.
-    - optimizer: An Optimizer object we will use to train the model
-    - epochs: (Optional) A Python integer giving the number of epochs to train for
-
-    Returns: Nothing, but prints model accuracies during training.
-    """
+    
     def get_lr(optimizer):
       for param_group in optimizer.param_groups:
           return param_group['lr']
