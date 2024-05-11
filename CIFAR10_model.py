@@ -7,7 +7,7 @@ from torch.utils.data import sampler
 
 import torchvision.datasets as dset
 import torchvision.transforms as T
-
+import time
 import numpy as np
 
 # for certificate issues
@@ -111,7 +111,7 @@ class CIFAR10_Model(nn.Module):
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.conv5(x)
-        x = self.conv6(x)
+        x = self.conv6(x) + x
         out = self.fc(x)
         return out
 
@@ -125,18 +125,18 @@ optimizer = optim.AdamW(model.parameters(), lr=max_lr, weight_decay=1e-4)
 print_every = 100
 
 def train(model, optimizer, epochs=1):
-    
+
     def get_lr(optimizer):
       for param_group in optimizer.param_groups:
           return param_group['lr']
           
-    sched = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr, epochs=10, 
+    sched = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr, epochs=epochs, 
                                                 steps_per_epoch=len(loader_train))
     
     #sched = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=766*3)
     model = model.to(device=device)
     for e in range(epochs):
-        print("EPOCH: ", e)
+        print("EPOCH: ", e+1)
         lrs = []
         print(len(loader_train))
         for t, (x, y) in enumerate(loader_train):
@@ -164,6 +164,9 @@ def train(model, optimizer, epochs=1):
                 print("Last learning rate: ", lrs[len(lrs)-1])
                 print()
 
-train(model, optimizer, epochs=10)
+start = time.perf_counter()
+train(model, optimizer, epochs=12)
+end = time.perf_counter()
+print("TRAINING TIME: ", end-start)
 best_model = model
 eval(loader_test, best_model)
