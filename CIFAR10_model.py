@@ -97,8 +97,8 @@ class FC(nn.Module):
 class CIFAR10_Model(nn.Module):
     def __init__(self, in_channel=3, channel_1=128, channel_2=256, channel_3=512, num_classes=10, active='GELU', norm=True, dropout=0.2, conv_bias=True):
         super().__init__()
-        self.conv1 = Conv(in_channel, channel_1, norm=norm, active=active, pool=False, bias=conv_bias)
-        self.conv2 = Conv(channel_1, channel_1, norm=norm, active=active, pool=True, bias=conv_bias)
+        self.conv1 = Conv(in_channel, channel_1, norm=norm, active=active, pool=True, bias=conv_bias)
+        self.conv2 = Conv(channel_1, channel_1, norm=norm, active=active, pool=False, bias=conv_bias)
         self.conv3 = Conv(channel_1, channel_2, norm=norm, active=active, pool=False, bias=conv_bias)
         self.conv4 = Conv(channel_2, channel_2, norm=norm, active=active, pool=True, bias=conv_bias)
         self.conv5 = Conv(channel_2, channel_3, norm=norm, active=active, pool=True, bias=conv_bias)
@@ -165,7 +165,7 @@ def train(model, optimizer, epochs=1):
                 print()
 
 start = time.perf_counter()
-train(model, optimizer, epochs=12)
+train(model, optimizer, epochs=10)
 end = time.perf_counter()
 print("TRAINING TIME: ", end-start)
 best_model = model
